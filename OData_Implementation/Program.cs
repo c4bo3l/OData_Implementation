@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Model.OData;
+using Model.OData.Seed;
 
 namespace OData_Implementation
 {
@@ -21,7 +22,10 @@ namespace OData_Implementation
                     // upgrade and/or seed DB
                     var dbContext = services.GetRequiredService<ODataContext>();
                     var config = services.GetRequiredService<Microsoft.Extensions.Configuration.IConfiguration>();
-                    dbContext.MigrateDatabase(); // synchronous call (we need the database to start the webapi)
+                    dbContext.MigrateDatabase();
+
+                    Seeder seeder = new Seeder(dbContext);
+                    seeder.Runner();
                 }
                 catch (Exception ex)
                 {
